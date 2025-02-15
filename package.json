@@ -1,0 +1,19 @@
+{
+  "name": "my-react",
+  "version": "0.0.0",
+  "description": "Make React with Vanilla JavaScript",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Gunwoo Baik <gwbaik9717@icloud.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.1.0"
+  },
+  "type": "module"
+}
