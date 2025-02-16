@@ -91,7 +91,10 @@ describe("createElement Unit Test", () => {
       {
         type: "div",
         props: {
-          children: [[{ type: "span", props: {} }], [{ type: "a", props: {} }]],
+          children: [
+            { type: "span", props: {} },
+            { type: "a", props: {} },
+          ],
         },
       },
     ],
@@ -104,7 +107,74 @@ describe("createElement Unit Test", () => {
       },
     ],
   ])(
-    "creatElement 의 children parameter 에 배열로 넘길 수 있다. (case: %s)",
+    "creatElement의 children parameter에 배열로 넘길 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+  test.each([
+    [
+      "boolean values as direct children",
+      createElement("div", null, false, createElement("span", null), true),
+      {
+        type: "div",
+        props: {
+          children: [{ type: "span", props: {} }],
+        },
+      },
+    ],
+    [
+      "boolean values inside an array",
+      createElement("div", null, [false, createElement("span", null), true]),
+      {
+        type: "div",
+        props: {
+          children: [{ type: "span", props: {} }],
+        },
+      },
+    ],
+    [
+      "boolean values in nested arrays",
+      createElement("div", null, [
+        [false, createElement("span", null)],
+        [true, createElement("a", null)],
+      ]),
+      {
+        type: "div",
+        props: {
+          children: [
+            { type: "span", props: {} },
+            { type: "a", props: {} },
+          ],
+        },
+      },
+    ],
+    [
+      "only boolean values",
+      createElement("div", null, false, true),
+      {
+        type: "div",
+        props: {},
+      },
+    ],
+    [
+      "boolean values mixed with valid elements",
+      createElement(
+        "div",
+        null,
+        false,
+        createElement("p", null, "Hello"),
+        true
+      ),
+      {
+        type: "div",
+        props: {
+          children: [{ type: "p", props: { children: ["Hello"] } }],
+        },
+      },
+    ],
+  ])(
+    "createElement의 children parameter에 Boolean 값이 들어간다면 무시한다. (case: %s)",
     (_, element, expected) => {
       expect(element).toEqual(expected);
     }
