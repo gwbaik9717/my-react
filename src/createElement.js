@@ -34,14 +34,7 @@ export const createElement = (type, props, ...children) => {
 
   // Function Component
   if (typeof type === "function") {
-    const element = type();
-
-    if (isRenderable(element)) {
-      return {
-        type: element.type,
-        props: element.props,
-      };
-    }
+    const element = type(props);
 
     return element;
   }

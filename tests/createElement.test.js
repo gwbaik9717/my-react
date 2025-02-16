@@ -277,4 +277,104 @@ describe("createElement Unit Test", () => {
       expect(element).toEqual(expected);
     }
   );
+
+  test.each(
+    [
+      "function component with props",
+      (() => {
+        const Component = (props) => {
+          return createElement("span", null, props.text);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Component, { text: "Hello" })
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: "span",
+              props: {
+                children: "Hello",
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component with multiple props",
+      (() => {
+        const Component = (props) => {
+          return createElement("p", { className: props.className }, props.text);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Component, { text: "Hello", className: "greeting" })
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: {
+            type: "p",
+            props: {
+              className: "greeting",
+              children: "Hello",
+            },
+          },
+        },
+      },
+    ],
+    [
+      "function component with nested function component using props",
+      (() => {
+        const Child = (props) => {
+          return createElement("b", null, props.content);
+        };
+
+        const Parent = (props) => {
+          return createElement(
+            "p",
+            null,
+            createElement(Child, { content: props.text })
+          );
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Parent, { text: "Bold Text" })
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: {
+            type: "p",
+            props: {
+              children: {
+                type: "b",
+                props: {
+                  children: "Bold Text",
+                },
+              },
+            },
+          },
+        },
+      },
+    ]
+  )(
+    "createElement의 type parameter Function Component 에 props 를 전달할 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+
 });
