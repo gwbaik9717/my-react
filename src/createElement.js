@@ -1,34 +1,54 @@
+const flatten = (child) => {
+  const result = [];
+
+  if (Array.isArray(child)) {
+    for (const item of child) {
+      const flattened = flatten(item);
+      result.push(...flattened);
+    }
+
+    return result;
+  }
+
+  if (isRenderable(child)) {
+    result.push(child);
+  }
+
+  return result;
+};
+
+const isRenderable = (child) => {
+  if (child === true || child === false) {
+    return false;
+  }
+
+  if (child === undefined || child === null) {
+    return false;
+  }
+
+  return true;
+};
+
 export const createElement = (type, props, ...children) => {
   const newProps = { ...props };
 
-  const newChildren = [];
+  // Function Component
+  if (typeof type === "function") {
+    const element = type();
 
-  const flatten = (target) => {
-    const result = [];
-
-    if (Array.isArray(target)) {
-      for (const item of target) {
-        const flattened = flatten(item);
-        result.push(...flattened);
-      }
-
-      return result;
+    if (isRenderable(element)) {
+      return {
+        type: element.type,
+        props: element.props,
+      };
     }
 
-    if (target === true || target === false) {
-      return result;
-    }
-
-    result.push(target);
-
-    return result;
-  };
+    return element;
+  }
 
   const flattened = flatten(children);
-  newChildren.push(...flattened);
-
-  if (newChildren.length > 0) {
-    newProps.children = newChildren;
+  if (flattened.length > 0) {
+    newProps.children = flattened;
   }
 
   return { type, props: newProps };

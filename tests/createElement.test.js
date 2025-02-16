@@ -179,4 +179,102 @@ describe("createElement Unit Test", () => {
       expect(element).toEqual(expected);
     }
   );
+
+  test.each([
+    [
+      "simple function component",
+      (() => {
+        const Component = () => {
+          return createElement("span", null, "Child");
+        };
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: "span",
+              props: {
+                children: ["Child"],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "nested function components",
+      (() => {
+        const InnerComponent = () => {
+          return createElement("b", null, "Bold");
+        };
+
+        const OuterComponent = () => {
+          return createElement("p", null, createElement(InnerComponent, null));
+        };
+
+        return createElement("div", null, createElement(OuterComponent, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: "p",
+              props: {
+                children: [
+                  {
+                    type: "b",
+                    props: {
+                      children: ["Bold"],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component without children",
+      (() => {
+        const Component = () => {
+          return createElement("hr", null);
+        };
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: "hr",
+              props: {},
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component returning null",
+      (() => {
+        const Component = () => null;
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {}, // No children since it returns null
+      },
+    ],
+  ])(
+    "createElement의 type parameter에 Function Component 를 수용할 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
 });
