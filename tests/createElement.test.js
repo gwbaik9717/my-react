@@ -45,4 +45,68 @@ describe("createElement Unit Test", () => {
       },
     });
   });
+
+  test.each([
+    [
+      "array with multiple elements",
+      createElement("div", null, [
+        createElement("span", null),
+        createElement("a", null),
+      ]),
+      {
+        type: "div",
+        props: {
+          children: [
+            { type: "span", props: {} },
+            { type: "a", props: {} },
+          ],
+        },
+      },
+    ],
+    [
+      "array with multiple elements and non-array item",
+      createElement(
+        "div",
+        null,
+        [createElement("span", null), createElement("a", null)],
+        createElement("span", null)
+      ),
+      {
+        type: "div",
+        props: {
+          children: [
+            { type: "span", props: {} },
+            { type: "a", props: {} },
+            { type: "span", props: {} },
+          ],
+        },
+      },
+    ],
+    [
+      "nested arrays as children",
+      createElement("div", null, [
+        [createElement("span", null)],
+        [createElement("a", null)],
+      ]),
+      {
+        type: "div",
+        props: {
+          children: [[{ type: "span", props: {} }], [{ type: "a", props: {} }]],
+        },
+      },
+    ],
+    [
+      "empty array as children",
+      createElement("div", null, []),
+      {
+        type: "div",
+        props: {},
+      },
+    ],
+  ])(
+    "creatElement 의 children parameter 에 배열로 넘길 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
 });
