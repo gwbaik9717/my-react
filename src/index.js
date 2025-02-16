@@ -1,10 +1,8 @@
-import { Sample } from "./sample";
+import { App } from "./components/App";
+import { createElement } from "./createElement";
 
-globalThis.createElement = (tag, props, ...children) => {
-  console.log("JSX 변환됨:", { tag, props, children });
-  return { tag, props, children };
-};
-
+globalThis.createElement = createElement;
 globalThis.Fragment = (props, ...children) => children;
 
-Sample();
+const app = App();
+console.log(app);
