@@ -32,16 +32,16 @@ const isRenderable = (child) => {
 export const createElement = (type, props, ...children) => {
   const newProps = { ...props };
 
-  // Function Component
-  if (typeof type === "function") {
-    const element = type(props);
-
-    return element;
-  }
-
   const flattened = flatten(children);
   if (flattened.length > 0) {
     newProps.children = flattened;
+  }
+
+  // Function Component
+  if (typeof type === "function") {
+    const element = type(newProps);
+
+    return element;
   }
 
   return { type, props: newProps };
