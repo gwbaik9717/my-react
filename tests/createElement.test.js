@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { createElement } from "../src/createElement";
+import { createElement } from "../src/lib/createElement";
 
 describe("createElement Unit Test", () => {
   test("createElement 함수는 파라미터로 type, props, children(Optional)을 받고 반환값으로 type, props 라는 속성을 가진 객체를 반환한다.", () => {

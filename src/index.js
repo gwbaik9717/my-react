@@ -1,8 +1,9 @@
 import { App } from "./components/App";
-import { createElement } from "./createElement";
+import { createElement } from "./lib/createElement";
+import { Fragment } from "./lib/fragment";
 
 globalThis.createElement = createElement;
-globalThis.Fragment = (props, ...children) => children;
+globalThis.Fragment = Fragment;
 
 const app = App();
 console.log(app);

@@ -1,5 +1,6 @@
 import { Content } from "./Content";
 import { Header } from "./Header";
+import { Sample } from "./Sample";
 
 export const App = () => {
   const headerLinks = [
@@ -11,7 +12,7 @@ export const App = () => {
     <div id="app">
       <Header title={"My Website"} links={headerLinks} />
       <Content>
-        <div>Main Content</div>
+        <Sample />
       </Content>
     </div>
   );
