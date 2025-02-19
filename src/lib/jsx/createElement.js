@@ -33,15 +33,19 @@ const flatten = (child) => {
  * @returns {boolean} - 자식 요소가 렌더링 가능하면 true, 그렇지 않으면 false를 반환.
  */
 const isRenderable = (child) => {
-  if (child === true || child === false) {
+  if (child === null) {
     return false;
   }
 
-  if (child === undefined || child === null) {
-    return false;
+  if (typeof child === "string") {
+    return true;
   }
 
-  return true;
+  if (typeof child === "object" && "props" in child && "type" in child) {
+    return true;
+  }
+
+  return false;
 };
 
 /**
