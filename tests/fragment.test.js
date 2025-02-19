@@ -1,6 +1,6 @@
 import { expect, test, describe } from "vitest";
-import { Fragment } from "../src/lib/fragment";
-import { createElement } from "../src/lib/createElement";
+import { Fragment } from "../src/lib/jsx";
+import { createElement } from "../src/lib/jsx";
 
 describe("Fragment Unit Test", () => {
   test("Fragment는 자식 요소들을 배열로 반환한다.", () => {
