@@ -82,4 +82,15 @@ describe("render Unit Test", () => {
       expect(root.innerHTML).toBe(expected);
     }
   );
+
+  test("render 함수는 빈 Virtual DOM 객체를 올바르게 렌더링한다.", () => {
+    const vdom = createElement("div", null);
+
+    document.body.innerHTML = `<div id="root"></div>`;
+    const root = document.getElementById("root");
+
+    render(vdom, root);
+
+    expect(root.innerHTML).toBe("<div></div>");
+  });
 });
