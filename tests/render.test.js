@@ -39,4 +39,15 @@ describe("render Unit Test", () => {
       "<div><h1>Title</h1><ul><li>Item 1</li><li>Item 2</li></ul></div>"
     );
   });
+
+  test("render 함수는 props가 있는 Virtual DOM 객체를 올바르게 렌더링한다.", () => {
+    const vdom = createElement("button", { class: "btn" }, "Click Me");
+
+    document.body.innerHTML = `<div id="root"></div>`;
+    const root = document.getElementById("root");
+
+    render(vdom, root);
+
+    expect(root.innerHTML).toBe('<button class="btn">Click Me</button>');
+  });
 });
