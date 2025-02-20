@@ -93,4 +93,52 @@ describe("render Unit Test", () => {
 
     expect(root.innerHTML).toBe("<div></div>");
   });
+
+  test.each([
+    {
+      description: "Functional Component with no props",
+      component: () =>
+        createElement(() => createElement("div", null, "Functional Component")),
+      expected: "<div>Functional Component</div>",
+    },
+    {
+      description: "Functional Component with props",
+      component: (props) =>
+        createElement(
+          (props) =>
+            createElement("button", { class: props.class }, props.text),
+          props
+        ),
+      props: { class: "btn", text: "Click Me" },
+      expected: '<button class="btn">Click Me</button>',
+    },
+    {
+      description: "Functional Component with children",
+      component: (props) =>
+        createElement(
+          (props) =>
+            createElement(
+              "div",
+              null,
+              createElement("h1", null, props.title),
+              createElement("p", null, props.content)
+            ),
+          props
+        ),
+      props: { title: "Title", content: "Content" },
+      expected: "<div><h1>Title</h1><p>Content</p></div>",
+    },
+  ])(
+    "render 함수는 Functional Component 를 올바르게 렌더링한다. (case: $description)",
+    ({ component, props, expected }) => {
+      const vdom = component(props);
+
+      document.body.innerHTML = `<div id="root"></div>`;
+      const root = document.getElementById("root");
+
+      render(vdom, root);
+
+      expect(root.innerHTML).toBe(expected);
+    }
+  );
 });
