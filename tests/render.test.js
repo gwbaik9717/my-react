@@ -16,4 +16,27 @@ describe("render Unit Test", () => {
 
     expect(root.innerHTML).toBe('<div id="app"><p>Hello World</p></div>');
   });
+
+  test("render 함수는 중첩된 Virtual DOM 객체를 올바르게 렌더링한다.", () => {
+    const vdom = createElement(
+      "div",
+      null,
+      createElement("h1", null, "Title"),
+      createElement(
+        "ul",
+        null,
+        createElement("li", null, "Item 1"),
+        createElement("li", null, "Item 2")
+      )
+    );
+
+    document.body.innerHTML = `<div id="root"></div>`;
+    const root = document.getElementById("root");
+
+    render(vdom, root);
+
+    expect(root.innerHTML).toBe(
+      "<div><h1>Title</h1><ul><li>Item 1</li><li>Item 2</li></ul></div>"
+    );
+  });
 });
