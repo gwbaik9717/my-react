@@ -1,8 +1,10 @@
 export const React = (() => {
-  let hook = null;
+  let hook;
 
   const useState = (initialValue) => {
-    hook = initialValue;
+    if (hook === undefined) {
+      hook = initialValue;
+    }
 
     const setState = (newValue) => {
       hook = newValue;
