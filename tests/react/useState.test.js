@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { React } from "../../src/lib/react";
 
-describe("useState Unit Test", () => {
+const render = (Component) => {
+  React.prepareForRender();
+  return Component();
+};
+
+describe("useState Unitw Test", () => {
   beforeEach(() => {
     React.__reset();
   });
@@ -12,11 +17,14 @@ describe("useState Unit Test", () => {
     const Component = () => {
       const result = React.useState(initialValue);
 
-      return result;
+      return {
+        render: () => result,
+      };
     };
 
     // Render Component
-    const result = Component();
+    const App = render(Component);
+    const result = App.render();
 
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(2);
@@ -29,11 +37,14 @@ describe("useState Unit Test", () => {
     const Component = () => {
       const [state, setState] = React.useState(initialValue);
 
-      return state;
+      return {
+        render: () => state,
+      };
     };
 
     // Render Component
-    const result = Component();
+    const App = render(Component);
+    const result = App.render();
 
     expect(result).toBe(initialValue);
   });
@@ -54,13 +65,13 @@ describe("useState Unit Test", () => {
     };
 
     // Render Component
-    let App = Component();
+    let App = render(Component);
 
     // state 변경
     App.click();
 
     // Rerender Component
-    App = Component();
+    App = render(Component);
 
     const state = App.render();
     expect(state).toBe(newValue);
@@ -84,14 +95,43 @@ describe("useState Unit Test", () => {
     };
 
     // Render Component
-    let App = Component();
+    let App = render(Component);
 
     // state 변경
     App.click();
 
     // Rerender Component
-    App = Component();
+    App = render(Component);
     const state = App.render();
     expect(state).toBe(newValue);
+  });
+
+  test("여러 개의 useState 함수가 선언되었을 때 각각의 state 를 관리/변경할 수 있다.", () => {
+    const initialValues = [1, "a"];
+    const changedValues = [2, "ab"];
+
+    const Component = () => {
+      const [state1, setState1] = React.useState(initialValues[0]);
+      const [state2, setState2] = React.useState(initialValues[1]);
+
+      return {
+        click: () => {
+          setState1((prev) => prev + 1);
+          setState2((prev) => prev + "b");
+        },
+        render: () => [state1, state2],
+      };
+    };
+
+    let App = render(Component);
+    const initialState = App.render();
+    expect(initialState).toEqual(initialValues);
+
+    // state 1 증가
+    App.click();
+
+    App = render(Component);
+    const changedState = App.render();
+    expect(changedState).toEqual(changedValues);
   });
 });

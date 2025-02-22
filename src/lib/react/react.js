@@ -1,30 +1,47 @@
 export const React = (() => {
-  let hook;
+  let hooks = [];
 
   // Use Only For Testing
   const __reset = () => {
-    hook = undefined;
+    hooks = [];
+  };
+
+  let globalHookIndex = 0;
+
+  const prepareForRender = () => {
+    globalHookIndex = 0;
   };
 
   const useState = (initialValue) => {
-    if (hook === undefined) {
-      hook = initialValue;
+    const currentHookIndex = globalHookIndex;
+
+    const setCurrentHook = (value) => {
+      hooks[currentHookIndex] = value;
+    };
+
+    if (hooks.at(currentHookIndex) === undefined) {
+      setCurrentHook(initialValue);
     }
 
     const setState = (state) => {
       if (typeof state === "function") {
-        hook = state(hook);
+        const newValue = state(hooks.at(currentHookIndex));
+        setCurrentHook(newValue);
         return;
       }
 
-      hook = state;
+      setCurrentHook(state);
     };
+
+    const hook = hooks.at(currentHookIndex);
+    globalHookIndex++;
 
     return [hook, setState];
   };
 
   return {
     useState,
+    prepareForRender,
     __reset,
   };
 })();
