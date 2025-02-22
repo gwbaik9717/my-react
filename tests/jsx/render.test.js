@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { render, createElement, Fragment } from "../src/lib/jsx";
+import { render, createElement, Fragment } from "../../src/lib/jsx";
 
 describe("render Unit Test", () => {
   test("render 함수는 파라미터로 Virtual DOM 객체와 Dom 객체를 받아 실제 DOM 에 반영한다.", () => {
