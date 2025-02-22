@@ -1,7 +1,11 @@
-import { describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { React } from "../../src/lib/react";
 
 describe("useState Unit Test", () => {
+  beforeEach(() => {
+    React.__reset();
+  });
+
   test("useState 함수의 인자로 state 의 초기값를 받고, state 와 state setter 함수로 이루어진 배열을 반환한다.", () => {
     const initialValue = 1;
 
@@ -50,15 +54,44 @@ describe("useState Unit Test", () => {
     };
 
     // Render Component
-    let component = Component();
+    let App = Component();
 
     // state 변경
-    component.click();
+    App.click();
 
     // Rerender Component
-    component = Component();
+    App = Component();
 
-    const state = component.render();
+    const state = App.render();
+    expect(state).toBe(newValue);
+  });
+
+  test("setter 함수의 paramter로 function 이 전달되었을 때, function의 parameter로 이전 state 값을 받고, state를 function의 리턴값으로 변경한다.", () => {
+    const initialValue = 1;
+    const newValue = 2;
+
+    const Component = () => {
+      const [state, setState] = React.useState(initialValue);
+
+      return {
+        render: () => state,
+        click: () => {
+          setState((prev) => {
+            return prev + 1;
+          });
+        },
+      };
+    };
+
+    // Render Component
+    let App = Component();
+
+    // state 변경
+    App.click();
+
+    // Rerender Component
+    App = Component();
+    const state = App.render();
     expect(state).toBe(newValue);
   });
 });

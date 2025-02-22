@@ -1,13 +1,23 @@
 export const React = (() => {
   let hook;
 
+  // Use Only For Testing
+  const __reset = () => {
+    hook = undefined;
+  };
+
   const useState = (initialValue) => {
     if (hook === undefined) {
       hook = initialValue;
     }
 
-    const setState = (newValue) => {
-      hook = newValue;
+    const setState = (state) => {
+      if (typeof state === "function") {
+        hook = state(hook);
+        return;
+      }
+
+      hook = state;
     };
 
     return [hook, setState];
@@ -15,5 +25,6 @@ export const React = (() => {
 
   return {
     useState,
+    __reset,
   };
 })();
