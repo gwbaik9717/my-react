@@ -8,7 +8,7 @@ export const React = (() => {
 
   let globalHookIndex = 0;
 
-  const prepareForRender = () => {
+  const __prepareForRender = () => {
     globalHookIndex = 0;
   };
 
@@ -41,7 +41,7 @@ export const React = (() => {
 
   return {
     useState,
-    prepareForRender,
+    __prepareForRender,
     __reset,
   };
 })();

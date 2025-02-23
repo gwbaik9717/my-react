@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { React } from "../../src/lib/react";
 
 const render = (Component) => {
-  React.prepareForRender();
+  React.__prepareForRender();
   return Component();
 };
 
@@ -133,5 +133,37 @@ describe("useState Unitw Test", () => {
     App = render(Component);
     const changedState = App.render();
     expect(changedState).toEqual(changedValues);
+  });
+
+  test("useState 는 동일한 렌더 내에서 여러 번 호출된 setState 를 처리한다.", () => {
+    const initialValue = 1;
+    const changedValue = 4;
+
+    const Component = () => {
+      const [state, setState] = React.useState(initialValue);
+
+      return {
+        render: () => state,
+        click: () => {
+          setState((prev) => {
+            return prev + 1;
+          });
+          setState((prev) => {
+            return prev + 2;
+          });
+        },
+      };
+    };
+
+    let App = render(Component);
+    const initialState = App.render();
+    expect(initialState).toEqual(initialValue);
+
+    // setState 가 동일한 렌더 내에 여러 번 변경
+    App.click();
+
+    App = render(Component);
+    const changedState = App.render();
+    expect(changedState).toEqual(changedValue);
   });
 });
