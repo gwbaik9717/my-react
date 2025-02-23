@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { createElement } from "../../src/lib/jsx";
+import { createElement, normalizeRenderableChild } from "../../src/lib/jsx";
 
 describe("createElement Unit Test", () => {
   test("createElement 함수는 파라미터로 type, props, children(Optional)을 받고 반환값으로 type, props 라는 속성을 가진 객체를 반환한다.", () => {
@@ -538,6 +538,50 @@ describe("createElement Unit Test", () => {
     ],
   ])(
     "createElement 의 type parameter가 Function Component이고, Function Component 의 children 이 존재할 때 props.children 으로 Function Component 내부에서 children 을 접근할 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+
+  test.each([
+    [
+      "숫자와 다른 타입의 자식 요소를 함께 포함할 수 있다.",
+      createElement("div", null, 123, createElement("span", null, "Hello")),
+      {
+        type: "div",
+        props: {
+          children: [
+            "123",
+            {
+              type: "span",
+              props: {
+                children: ["Hello"],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "숫자가 포함된 배열을 자식 요소로 포함할 수 있다.",
+      createElement("div", null, [123, createElement("span", null, "Hello")]),
+      {
+        type: "div",
+        props: {
+          children: [
+            "123",
+            {
+              type: "span",
+              props: {
+                children: ["Hello"],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  ])(
+    "createElement 함수는 숫자를 stringify 한다. (case: %s)",
     (_, element, expected) => {
       expect(element).toEqual(expected);
     }

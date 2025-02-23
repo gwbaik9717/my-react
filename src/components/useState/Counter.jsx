@@ -13,7 +13,7 @@ export const Counter = () => {
 
   return (
     <div>
-      <p>현재 카운트: {count.toString()}</p>
+      <p>현재 카운트: {count}</p>
       <button id="btn" onClick={handleClick}>
         증가
       </button>
