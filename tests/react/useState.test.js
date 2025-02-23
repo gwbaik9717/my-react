@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { React } from "../../src/lib/react";
+import { React } from "../../src/lib/react";
 
 describe("useState Unitw Test", () => {
   beforeEach(() => {

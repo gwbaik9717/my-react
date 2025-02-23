@@ -10,9 +10,12 @@ export const render = (virtualNode, rootNode) => {
         for (const child of attributeValue) {
           let childDomNode = null;
 
+          // child 가 텍스트 노드일 경우
           if (typeof child === "string") {
             childDomNode = document.createTextNode(child);
-          } else {
+          }
+          // child 가 텍스트가 아닌 일반 노드일 경우
+          else {
             childDomNode = createDomNode(child);
           }
 
@@ -20,6 +23,14 @@ export const render = (virtualNode, rootNode) => {
         }
 
         continue;
+      }
+
+      if (attributeName === "onClick") {
+        rootNode.addEventListener("click", (event) => {
+          if (event.target === parentDomNode) {
+            attributeValue();
+          }
+        });
       }
 
       parentDomNode.setAttribute(attributeName, attributeValue);
