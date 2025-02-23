@@ -1,14 +1,15 @@
 import { App } from "./components/useState/App";
-import { render } from "./lib/jsx";
+import { ReactDOM } from "./lib/react-dom";
 import { React } from "./lib/react";
 
-const sample = (Component, rootNode) => () => {
-  React.__prepareForRender();
-  render(Component(), rootNode);
+const render = (Component, rootNode) => {
+  React.__prepareForRender(Component);
+  ReactDOM.render(Component(), rootNode);
 };
 
 const root = document.getElementById("root");
 
-export const renderApp = sample(App, root);
+export const renderApp = () => render(App, root);
 
+// 초기 렌더링
 renderApp();

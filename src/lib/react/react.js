@@ -52,8 +52,6 @@ export const React = (() => {
     return [hook, setState];
   };
 
-  console.log(globalHooksMap);
-
   return {
     useState,
     __prepareForRender,

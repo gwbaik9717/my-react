@@ -1,5 +1,6 @@
 import { describe, test, expect } from "vitest";
-import { render, createElement, Fragment } from "../../src/lib/jsx";
+import { createElement, Fragment } from "../../src/lib/jsx";
+import { ReactDOM } from "../../src/lib/react-dom";
 
 describe("render Unit Test", () => {
   test("render 함수는 파라미터로 Virtual DOM 객체와 Dom 객체를 받아 실제 DOM 에 반영한다.", () => {
@@ -12,7 +13,7 @@ describe("render Unit Test", () => {
     document.body.innerHTML = `<div id="root"></div>`;
     const root = document.getElementById("root");
 
-    render(vdom, root);
+    ReactDOM.render(vdom, root);
 
     expect(root.innerHTML).toBe('<div id="app"><p>Hello World</p></div>');
   });
@@ -33,7 +34,7 @@ describe("render Unit Test", () => {
     document.body.innerHTML = `<div id="root"></div>`;
     const root = document.getElementById("root");
 
-    render(vdom, root);
+    ReactDOM.render(vdom, root);
 
     expect(root.innerHTML).toBe(
       "<div><h1>Title</h1><ul><li>Item 1</li><li>Item 2</li></ul></div>"
@@ -46,7 +47,7 @@ describe("render Unit Test", () => {
     document.body.innerHTML = `<div id="root"></div>`;
     const root = document.getElementById("root");
 
-    render(vdom, root);
+    ReactDOM.render(vdom, root);
 
     expect(root.innerHTML).toBe('<button class="btn">Click Me</button>');
   });
@@ -77,7 +78,7 @@ describe("render Unit Test", () => {
       document.body.innerHTML = `<div id="root"></div>`;
       const root = document.getElementById("root");
 
-      render(vdom, root);
+      ReactDOM.render(vdom, root);
 
       expect(root.innerHTML).toBe(expected);
     }
@@ -89,7 +90,7 @@ describe("render Unit Test", () => {
     document.body.innerHTML = `<div id="root"></div>`;
     const root = document.getElementById("root");
 
-    render(vdom, root);
+    ReactDOM.render(vdom, root);
 
     expect(root.innerHTML).toBe("<div></div>");
   });
@@ -136,7 +137,7 @@ describe("render Unit Test", () => {
       document.body.innerHTML = `<div id="root"></div>`;
       const root = document.getElementById("root");
 
-      render(vdom, root);
+      ReactDOM.render(vdom, root);
 
       expect(root.innerHTML).toBe(expected);
     }

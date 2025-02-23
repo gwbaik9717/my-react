@@ -7,7 +7,7 @@ export const Counter = () => {
   const handleClick = () => {
     setCount((prevCount) => prevCount + 1);
 
-    // 강제 리렌더링
+    // 강제 전체 리렌더링
     renderApp();
   };
 
