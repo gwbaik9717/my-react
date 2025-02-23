@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { React } from "../../src/lib/react";
 
-const render = (Component) => {
-  React.__prepareForRender();
-  return Component();
-};
-
 describe("useState Unitw Test", () => {
   beforeEach(() => {
     React.__reset();
   });
+
+  const render = (Component) => {
+    React.__prepareForRender(Component);
+    return Component();
+  };
 
   test("useState 함수의 인자로 state 의 초기값를 받고, state 와 state setter 함수로 이루어진 배열을 반환한다.", () => {
     const initialValue = 1;
@@ -165,5 +165,41 @@ describe("useState Unitw Test", () => {
     App = render(Component);
     const changedState = App.render();
     expect(changedState).toEqual(changedValue);
+  });
+
+  test("useState 는 서로 다른 컴포넌트에서 독립적인 상태를 관리한다.", () => {
+    const Component1 = () => {
+      const [state, setState] = React.useState(1);
+      return {
+        render: () => state,
+        click: () => setState((prev) => prev + 1),
+      };
+    };
+
+    const Component2 = () => {
+      const [state, setState] = React.useState("a");
+      return {
+        render: () => state,
+        click: () => setState((prev) => prev + "b"),
+      };
+    };
+
+    let App1 = render(Component1);
+    let App2 = render(Component2);
+
+    expect(App1.render()).toBe(1);
+    expect(App2.render()).toBe("a");
+
+    App1.click();
+    App1 = render(Component1);
+
+    expect(App1.render()).toBe(2);
+    expect(App2.render()).toBe("a");
+
+    App2.click();
+    App2 = render(Component2);
+
+    expect(App1.render()).toBe(2);
+    expect(App2.render()).toBe("ab");
   });
 });
