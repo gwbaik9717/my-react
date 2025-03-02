@@ -38,10 +38,16 @@ const addEventListenerToRootNode = (
  */
 export const render = (virtualNode, rootNode) => {
   const createDomNode = (node) => {
-    const tagName = node.type;
+    const tagType = node.type;
     const attributes = node.props;
 
-    const parentDomNode = document.createElement(tagName);
+    // Function Component 일 경우
+    if (typeof tagType === "function") {
+      const virtualNode = tagType(attributes);
+      return createDomNode(virtualNode);
+    }
+
+    const parentDomNode = document.createElement(tagType);
 
     for (const [attributeName, attributeValue] of Object.entries(attributes)) {
       if (attributeName === "children") {

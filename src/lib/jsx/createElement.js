@@ -86,12 +86,5 @@ export const createElement = (type, props, ...children) => {
     newProps.children = flattened;
   }
 
-  // Function Component 일 경우
-  if (typeof type === "function") {
-    const element = type(newProps);
-
-    return element;
-  }
-
   return { type, props: newProps };
 };

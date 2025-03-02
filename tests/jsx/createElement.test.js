@@ -182,369 +182,6 @@ describe("createElement Unit Test", () => {
 
   test.each([
     [
-      "simple function component",
-      (() => {
-        const Component = () => {
-          return createElement("span", null, "Child");
-        };
-
-        return createElement("div", null, createElement(Component, null));
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "span",
-              props: {
-                children: ["Child"],
-              },
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "nested function components",
-      (() => {
-        const InnerComponent = () => {
-          return createElement("b", null, "Bold");
-        };
-
-        const OuterComponent = () => {
-          return createElement("p", null, createElement(InnerComponent, null));
-        };
-
-        return createElement("div", null, createElement(OuterComponent, null));
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "p",
-              props: {
-                children: [
-                  {
-                    type: "b",
-                    props: {
-                      children: ["Bold"],
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "function component without children",
-      (() => {
-        const Component = () => {
-          return createElement("hr", null);
-        };
-
-        return createElement("div", null, createElement(Component, null));
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "hr",
-              props: {},
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "function component returning null",
-      (() => {
-        const Component = () => null;
-
-        return createElement("div", null, createElement(Component, null));
-      })(),
-      {
-        type: "div",
-        props: {}, // No children since it returns null
-      },
-    ],
-  ])(
-    "createElement의 type parameter에 Function Component 를 수용할 수 있다. (case: %s)",
-    (_, element, expected) => {
-      expect(element).toEqual(expected);
-    }
-  );
-
-  test.each(
-    [
-      "function component with props",
-      (() => {
-        const Component = (props) => {
-          return createElement("span", null, props.text);
-        };
-
-        return createElement(
-          "div",
-          null,
-          createElement(Component, { text: "Hello" })
-        );
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "span",
-              props: {
-                children: "Hello",
-              },
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "function component with multiple props",
-      (() => {
-        const Component = (props) => {
-          return createElement("p", { className: props.className }, props.text);
-        };
-
-        return createElement(
-          "div",
-          null,
-          createElement(Component, { text: "Hello", className: "greeting" })
-        );
-      })(),
-      {
-        type: "div",
-        props: {
-          children: {
-            type: "p",
-            props: {
-              className: "greeting",
-              children: "Hello",
-            },
-          },
-        },
-      },
-    ],
-    [
-      "function component with nested function component using props",
-      (() => {
-        const Child = (props) => {
-          return createElement("b", null, props.content);
-        };
-
-        const Parent = (props) => {
-          return createElement(
-            "p",
-            null,
-            createElement(Child, { content: props.text })
-          );
-        };
-
-        return createElement(
-          "div",
-          null,
-          createElement(Parent, { text: "Bold Text" })
-        );
-      })(),
-      {
-        type: "div",
-        props: {
-          children: {
-            type: "p",
-            props: {
-              children: {
-                type: "b",
-                props: {
-                  children: "Bold Text",
-                },
-              },
-            },
-          },
-        },
-      },
-    ]
-  )(
-    "createElement의 type parameter Function Component 에 props 를 전달할 수 있다. (case: %s)",
-    (_, element, expected) => {
-      expect(element).toEqual(expected);
-    }
-  );
-
-  test.each([
-    [
-      "simple function component with children",
-      (() => {
-        const Component = (props) => {
-          expect(props.children).toEqual([
-            {
-              type: "span",
-              props: {
-                children: ["Hello"],
-              },
-            },
-          ]);
-
-          return createElement("span", null);
-        };
-
-        return createElement(
-          "div",
-          null,
-          createElement(Component, null, createElement("span", null, "Hello"))
-        );
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "span",
-              props: {},
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "function component with multiple children",
-      (() => {
-        const Component = (props) => {
-          expect(props.children).toEqual([
-            {
-              type: "b",
-              props: {
-                children: ["Bold"],
-              },
-            },
-            {
-              type: "i",
-              props: {
-                children: ["Italic"],
-              },
-            },
-          ]);
-
-          return createElement("div", null);
-        };
-
-        return createElement(
-          "div",
-          null,
-          createElement(
-            Component,
-            null,
-            createElement("b", null, "Bold"),
-            createElement("i", null, "Italic")
-          )
-        );
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "div",
-              props: {},
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "function component with nested children",
-      (() => {
-        const Component = (props) => {
-          expect(props.children).toEqual([
-            {
-              type: "ul",
-              props: {
-                children: [
-                  {
-                    type: "li",
-                    props: {
-                      children: ["Item 1"],
-                    },
-                  },
-                  {
-                    type: "li",
-                    props: {
-                      children: ["Item 2"],
-                    },
-                  },
-                ],
-              },
-            },
-          ]);
-
-          return createElement("section", null);
-        };
-
-        return createElement(
-          "div",
-          null,
-          createElement(
-            Component,
-            null,
-            createElement(
-              "ul",
-              null,
-              createElement("li", null, "Item 1"),
-              createElement("li", null, "Item 2")
-            )
-          )
-        );
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "section",
-              props: {},
-            },
-          ],
-        },
-      },
-    ],
-    [
-      "function component receiving null children",
-      (() => {
-        const Component = (props) => {
-          expect(props.children).toBeUndefined();
-
-          return createElement("span", null);
-        };
-
-        return createElement("div", null, createElement(Component, null));
-      })(),
-      {
-        type: "div",
-        props: {
-          children: [
-            {
-              type: "span",
-              props: {},
-            },
-          ],
-        },
-      },
-    ],
-  ])(
-    "createElement 의 type parameter가 Function Component이고, Function Component 의 children 이 존재할 때 props.children 으로 Function Component 내부에서 children 을 접근할 수 있다. (case: %s)",
-    (_, element, expected) => {
-      expect(element).toEqual(expected);
-    }
-  );
-
-  test.each([
-    [
       "숫자와 다른 타입의 자식 요소를 함께 포함할 수 있다.",
       createElement("div", null, 123, createElement("span", null, "Hello")),
       {
@@ -582,6 +219,355 @@ describe("createElement Unit Test", () => {
     ],
   ])(
     "createElement 함수는 숫자를 stringify 한다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+
+  test.each([
+    [
+      "simple function component",
+      (() => {
+        const Component = () => {
+          return createElement("span", null, "Child");
+        };
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {},
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "nested function components",
+      (() => {
+        const InnerComponent = () => {
+          return createElement("b", null, "Bold");
+        };
+
+        const OuterComponent = () => {
+          return createElement("p", null, createElement(InnerComponent, null));
+        };
+
+        return createElement("div", null, createElement(OuterComponent, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {},
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component without children",
+      (() => {
+        const Component = () => {
+          return createElement("hr", null);
+        };
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {},
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component returning null",
+      (() => {
+        const Component = () => null;
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {},
+            },
+          ],
+        },
+      },
+    ],
+  ])(
+    "createElement의 type parameter에 Function Component 를 수용할 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+
+  test.each([
+    [
+      "function component with props",
+      (() => {
+        const Component = (props) => {
+          return createElement("span", null, props.text);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Component, { text: "Hello" })
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: { text: "Hello" },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component with multiple props",
+      (() => {
+        const Component = (props) => {
+          return createElement("p", { className: props.className }, props.text);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Component, { text: "Hello", className: "greeting" })
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: { text: "Hello", className: "greeting" },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component with nested function component using props",
+      (() => {
+        const Child = (props) => {
+          return createElement("b", null, props.content);
+        };
+
+        const Parent = (props) => {
+          return createElement(
+            "p",
+            null,
+            createElement(Child, { content: props.text })
+          );
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Parent, { text: "Bold Text" })
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: { text: "Bold Text" },
+            },
+          ],
+        },
+      },
+    ],
+  ])(
+    "createElement의 type parameter Function Component 에 props 를 전달할 수 있다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+
+  test.each([
+    [
+      "simple function component with children",
+      (() => {
+        const Component = (props) => {
+          return createElement("span", null);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(Component, null, createElement("span", null, "Hello"))
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {
+                children: [
+                  {
+                    type: "span",
+                    props: {
+                      children: ["Hello"],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component with multiple children",
+      (() => {
+        const Component = (props) => {
+          return createElement("div", null);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(
+            Component,
+            null,
+            createElement("b", null, "Bold"),
+            createElement("i", null, "Italic")
+          )
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {
+                children: [
+                  {
+                    type: "b",
+                    props: {
+                      children: ["Bold"],
+                    },
+                  },
+                  {
+                    type: "i",
+                    props: {
+                      children: ["Italic"],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component with nested children",
+      (() => {
+        const Component = (props) => {
+          return createElement("section", null);
+        };
+
+        return createElement(
+          "div",
+          null,
+          createElement(
+            Component,
+            null,
+            createElement(
+              "ul",
+              null,
+              createElement("li", null, "Item 1"),
+              createElement("li", null, "Item 2")
+            )
+          )
+        );
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {
+                children: [
+                  {
+                    type: "ul",
+                    props: {
+                      children: [
+                        {
+                          type: "li",
+                          props: {
+                            children: ["Item 1"],
+                          },
+                        },
+                        {
+                          type: "li",
+                          props: {
+                            children: ["Item 2"],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "function component receiving null children",
+      (() => {
+        const Component = (props) => {
+          return createElement("span", null);
+        };
+
+        return createElement("div", null, createElement(Component, null));
+      })(),
+      {
+        type: "div",
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {},
+            },
+          ],
+        },
+      },
+    ],
+  ])(
+    "createElement 의 type parameter가 Function Component이고, Function Component 의 children 이 존재할 때 props.children 으로 Function Component 내부에서 children 을 접근할 수 있다. (case: %s)",
     (_, element, expected) => {
       expect(element).toEqual(expected);
     }
