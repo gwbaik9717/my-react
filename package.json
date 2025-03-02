@@ -14,6 +14,7 @@
   "author": "Gunwoo Baik <gwbaik9717@icloud.com>",
   "license": "MIT",
   "devDependencies": {
+    "jsdom": "^26.0.0",
     "vite": "^6.1.0",
     "vitest": "^3.0.5"
   },

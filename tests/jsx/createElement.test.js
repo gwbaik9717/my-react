@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { createElement } from "../src/lib/jsx";
+import { createElement, normalizeRenderableChild } from "../../src/lib/jsx";
 
 describe("createElement Unit Test", () => {
   test("createElement 함수는 파라미터로 type, props, children(Optional)을 받고 반환값으로 type, props 라는 속성을 가진 객체를 반환한다.", () => {
@@ -182,6 +182,50 @@ describe("createElement Unit Test", () => {
 
   test.each([
     [
+      "숫자와 다른 타입의 자식 요소를 함께 포함할 수 있다.",
+      createElement("div", null, 123, createElement("span", null, "Hello")),
+      {
+        type: "div",
+        props: {
+          children: [
+            "123",
+            {
+              type: "span",
+              props: {
+                children: ["Hello"],
+              },
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "숫자가 포함된 배열을 자식 요소로 포함할 수 있다.",
+      createElement("div", null, [123, createElement("span", null, "Hello")]),
+      {
+        type: "div",
+        props: {
+          children: [
+            "123",
+            {
+              type: "span",
+              props: {
+                children: ["Hello"],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  ])(
+    "createElement 함수는 숫자를 stringify 한다. (case: %s)",
+    (_, element, expected) => {
+      expect(element).toEqual(expected);
+    }
+  );
+
+  test.each([
+    [
       "simple function component",
       (() => {
         const Component = () => {
@@ -195,10 +239,8 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "span",
-              props: {
-                children: ["Child"],
-              },
+              type: expect.any(Function),
+              props: {},
             },
           ],
         },
@@ -222,17 +264,8 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "p",
-              props: {
-                children: [
-                  {
-                    type: "b",
-                    props: {
-                      children: ["Bold"],
-                    },
-                  },
-                ],
-              },
+              type: expect.any(Function),
+              props: {},
             },
           ],
         },
@@ -252,7 +285,7 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "hr",
+              type: expect.any(Function),
               props: {},
             },
           ],
@@ -268,7 +301,14 @@ describe("createElement Unit Test", () => {
       })(),
       {
         type: "div",
-        props: {}, // No children since it returns null
+        props: {
+          children: [
+            {
+              type: expect.any(Function),
+              props: {},
+            },
+          ],
+        },
       },
     ],
   ])(
@@ -278,7 +318,7 @@ describe("createElement Unit Test", () => {
     }
   );
 
-  test.each(
+  test.each([
     [
       "function component with props",
       (() => {
@@ -297,10 +337,8 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "span",
-              props: {
-                children: "Hello",
-              },
+              type: expect.any(Function),
+              props: { text: "Hello" },
             },
           ],
         },
@@ -322,13 +360,12 @@ describe("createElement Unit Test", () => {
       {
         type: "div",
         props: {
-          children: {
-            type: "p",
-            props: {
-              className: "greeting",
-              children: "Hello",
+          children: [
+            {
+              type: expect.any(Function),
+              props: { text: "Hello", className: "greeting" },
             },
-          },
+          ],
         },
       },
     ],
@@ -356,21 +393,16 @@ describe("createElement Unit Test", () => {
       {
         type: "div",
         props: {
-          children: {
-            type: "p",
-            props: {
-              children: {
-                type: "b",
-                props: {
-                  children: "Bold Text",
-                },
-              },
+          children: [
+            {
+              type: expect.any(Function),
+              props: { text: "Bold Text" },
             },
-          },
+          ],
         },
       },
-    ]
-  )(
+    ],
+  ])(
     "createElement의 type parameter Function Component 에 props 를 전달할 수 있다. (case: %s)",
     (_, element, expected) => {
       expect(element).toEqual(expected);
@@ -382,15 +414,6 @@ describe("createElement Unit Test", () => {
       "simple function component with children",
       (() => {
         const Component = (props) => {
-          expect(props.children).toEqual([
-            {
-              type: "span",
-              props: {
-                children: ["Hello"],
-              },
-            },
-          ]);
-
           return createElement("span", null);
         };
 
@@ -405,8 +428,17 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "span",
-              props: {},
+              type: expect.any(Function),
+              props: {
+                children: [
+                  {
+                    type: "span",
+                    props: {
+                      children: ["Hello"],
+                    },
+                  },
+                ],
+              },
             },
           ],
         },
@@ -416,21 +448,6 @@ describe("createElement Unit Test", () => {
       "function component with multiple children",
       (() => {
         const Component = (props) => {
-          expect(props.children).toEqual([
-            {
-              type: "b",
-              props: {
-                children: ["Bold"],
-              },
-            },
-            {
-              type: "i",
-              props: {
-                children: ["Italic"],
-              },
-            },
-          ]);
-
           return createElement("div", null);
         };
 
@@ -450,8 +467,23 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "div",
-              props: {},
+              type: expect.any(Function),
+              props: {
+                children: [
+                  {
+                    type: "b",
+                    props: {
+                      children: ["Bold"],
+                    },
+                  },
+                  {
+                    type: "i",
+                    props: {
+                      children: ["Italic"],
+                    },
+                  },
+                ],
+              },
             },
           ],
         },
@@ -461,28 +493,6 @@ describe("createElement Unit Test", () => {
       "function component with nested children",
       (() => {
         const Component = (props) => {
-          expect(props.children).toEqual([
-            {
-              type: "ul",
-              props: {
-                children: [
-                  {
-                    type: "li",
-                    props: {
-                      children: ["Item 1"],
-                    },
-                  },
-                  {
-                    type: "li",
-                    props: {
-                      children: ["Item 2"],
-                    },
-                  },
-                ],
-              },
-            },
-          ]);
-
           return createElement("section", null);
         };
 
@@ -506,8 +516,30 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "section",
-              props: {},
+              type: expect.any(Function),
+              props: {
+                children: [
+                  {
+                    type: "ul",
+                    props: {
+                      children: [
+                        {
+                          type: "li",
+                          props: {
+                            children: ["Item 1"],
+                          },
+                        },
+                        {
+                          type: "li",
+                          props: {
+                            children: ["Item 2"],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
             },
           ],
         },
@@ -517,8 +549,6 @@ describe("createElement Unit Test", () => {
       "function component receiving null children",
       (() => {
         const Component = (props) => {
-          expect(props.children).toBeUndefined();
-
           return createElement("span", null);
         };
 
@@ -529,7 +559,7 @@ describe("createElement Unit Test", () => {
         props: {
           children: [
             {
-              type: "span",
+              type: expect.any(Function),
               props: {},
             },
           ],

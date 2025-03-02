@@ -17,10 +17,32 @@ const flatten = (child) => {
   }
 
   if (isRenderable(child)) {
-    result.push(child);
+    const normalizedChild = normalizeRenderableChild(child);
+    result.push(normalizedChild);
   }
 
   return result;
+};
+
+/**
+ * 주어진 자식 요소를 정규화하는 함수
+ *
+ * 자식 요소는 boolean 값(true 또는 false)이 아니고,
+ * undefined 또는 null이 아닌 경우 렌더링 가능하다고 간주됩니다.
+ *
+ * @param {*} child - 정규화할 자식 요소.
+ * @returns {*} - 정규화된 자식 요소.
+ */
+export const normalizeRenderableChild = (child) => {
+  if (!isRenderable(child)) {
+    throw new Error("Child is not renderable!");
+  }
+
+  if (typeof child === "number") {
+    return child.toString();
+  }
+
+  return child;
 };
 
 /**
@@ -37,7 +59,7 @@ const isRenderable = (child) => {
     return false;
   }
 
-  if (typeof child === "string") {
+  if (typeof child === "string" || typeof child === "number") {
     return true;
   }
 
@@ -62,13 +84,6 @@ export const createElement = (type, props, ...children) => {
   const flattened = flatten(children);
   if (flattened.length > 0) {
     newProps.children = flattened;
-  }
-
-  // Function Component 일 경우
-  if (typeof type === "function") {
-    const element = type(newProps);
-
-    return element;
   }
 
   return { type, props: newProps };
