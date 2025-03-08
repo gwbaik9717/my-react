@@ -5,10 +5,10 @@ export const EffectTag = {
 
 const createReactElement = (element) => {
   // 텍스트 노드일 경우
-  if (typeof element === "string") {
+  if (typeof element === "string" || typeof element === "number") {
     return {
       type: "text",
-      text: element,
+      text: element.toString(),
       parent: null,
       domNode: null,
       effectTag: EffectTag.NoChange,
@@ -48,8 +48,8 @@ const createReactElement = (element) => {
  * @param {*} child - 확인할 자식 요소.
  * @returns {boolean} - 자식 요소가 렌더링 가능하면 true, 그렇지 않으면 false를 반환.
  */
-export const isRenderable = (child) => {
-  if (child === null) {
+const isRenderable = (child) => {
+  if (child === null || child === undefined || typeof child === "boolean") {
     return false;
   }
 
@@ -67,7 +67,7 @@ export const isRenderable = (child) => {
 // Convert Virtual Node to React Element
 export const render = (virtualNode) => {
   if (!isRenderable(virtualNode)) {
-    return virtualNode;
+    return null;
   }
 
   const reactElement = createReactElement(virtualNode);
@@ -97,7 +97,7 @@ export const render = (virtualNode) => {
 
     if (childReactElement) {
       // 부모 포인터 설정
-      childReactElement.parent = virtualNode;
+      childReactElement.parent = reactElement;
       reactElement.children.push(childReactElement);
     }
   }

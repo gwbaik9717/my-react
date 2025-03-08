@@ -7,9 +7,8 @@ export const createRoot = (rootDomNode) => {
   // Init root
   React.__setRoot(reactRoot);
 
-  const render = (rootVirtualNode) => {
-    reactRoot.rootVirtualNode = rootVirtualNode;
-    updateRootReactElement(rootVirtualNode, reactRoot);
+  const render = (virtualNode) => {
+    updateRootReactElement(virtualNode, rootDomNode, reactRoot);
   };
 
   return {
@@ -27,29 +26,27 @@ const createRootReact = (container) => {
 
     // 수정 중인 React Tree
     wip: null,
-
-    // virtual Node ex. <App />
-    rootVirtualNode: null,
   };
 };
 
-const updateRootReactElement = (rootVirtualNode, reactRoot) => {
-  const rootReactElement = render(rootVirtualNode);
+const updateRootReactElement = (virtualNode, rootDomNode, reactRoot) => {
+  const rootReactElement = render(virtualNode);
 
-  // Initial Rendering
+  // Initial Rerendering
   if (!reactRoot.current) {
     reactRoot.current = rootReactElement;
+    commitWork(reactRoot);
     return;
   }
 
-  // Set new rootReactElement to wip
+  // Rerendering
   reactRoot.wip = rootReactElement;
 
   // Step 1: Compare current and wip (Reconciliation)
   reconcile(reactRoot.current, reactRoot.wip);
 
   // Step 2: Apply changes (Commit Phase)
-  commitWork(reactRoot.wip);
+  commitWork(reactRoot);
 
   // Step 3: Swap wip to current
   reactRoot.current = reactRoot.wip;

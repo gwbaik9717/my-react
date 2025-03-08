@@ -1,5 +1,3 @@
-import { isRenderable } from "../react/render";
-
 /**
  * 주어진 자식을 평탄화하여 단일 배열로 반환합니다.
  *
@@ -18,33 +16,8 @@ const flatten = (child) => {
     return result;
   }
 
-  if (isRenderable(child)) {
-    const normalizedChild = normalizeRenderableChild(child);
-    result.push(normalizedChild);
-  }
-
+  result.push(child);
   return result;
-};
-
-/**
- * 주어진 자식 요소를 정규화하는 함수
- *
- * 자식 요소는 boolean 값(true 또는 false)이 아니고,
- * undefined 또는 null이 아닌 경우 렌더링 가능하다고 간주됩니다.
- *
- * @param {*} child - 정규화할 자식 요소.
- * @returns {*} - 정규화된 자식 요소.
- */
-export const normalizeRenderableChild = (child) => {
-  if (!isRenderable(child)) {
-    throw new Error("Child is not renderable!");
-  }
-
-  if (typeof child === "number") {
-    return child.toString();
-  }
-
-  return child;
 };
 
 /**
