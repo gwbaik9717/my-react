@@ -66,7 +66,6 @@ export const React = (() => {
     useState,
     __prepareForRender,
     __reset,
-    __setFiberRoot,
     __setGlobalHooks,
     __setRoot,
   };

@@ -1,3 +1,5 @@
+import { isRenderable } from "../react/render";
+
 /**
  * 주어진 자식을 평탄화하여 단일 배열로 반환합니다.
  *
@@ -43,31 +45,6 @@ export const normalizeRenderableChild = (child) => {
   }
 
   return child;
-};
-
-/**
- * 주어진 자식 요소가 렌더링 가능한지 확인하는 함수
- *
- * 자식 요소는 boolean 값(true 또는 false)이 아니고,
- * undefined 또는 null이 아닌 경우 렌더링 가능하다고 간주됩니다.
- *
- * @param {*} child - 확인할 자식 요소.
- * @returns {boolean} - 자식 요소가 렌더링 가능하면 true, 그렇지 않으면 false를 반환.
- */
-const isRenderable = (child) => {
-  if (child === null) {
-    return false;
-  }
-
-  if (typeof child === "string" || typeof child === "number") {
-    return true;
-  }
-
-  if (typeof child === "object" && "props" in child && "type" in child) {
-    return true;
-  }
-
-  return false;
 };
 
 /**
