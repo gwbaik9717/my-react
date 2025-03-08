@@ -1,7 +1,13 @@
 export const React = (() => {
+  let __root = null;
+
   let globalHooksMap = new Map();
   let globalHooks = null;
   let globalHookIndex = 0;
+
+  const __setRoot = (reactRoot) => {
+    __root = reactRoot;
+  };
 
   const __setGlobalHooks = (hooks) => {
     globalHooks = hooks;
@@ -62,5 +68,6 @@ export const React = (() => {
     __reset,
     __setFiberRoot,
     __setGlobalHooks,
+    __setRoot,
   };
 })();
