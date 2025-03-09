@@ -73,7 +73,7 @@ const isRenderable = (child) => {
 };
 
 // Convert Virtual Node to React Element
-export const render = (virtualNode, alternateReactElement) => {
+export const render = (virtualNode, oldReactElement) => {
   if (!isRenderable(virtualNode)) {
     return null;
   }
@@ -85,11 +85,12 @@ export const render = (virtualNode, alternateReactElement) => {
   if (typeof reactElementType === "function") {
     // 컴포넌트 호출
     const virtualNode = reactElementType(reactElement.props);
-    return render(virtualNode, alternateReactElement);
+    return render(virtualNode, oldReactElement);
   }
 
-  if (alternateReactElement) {
-    reactElement.alternate = alternateReactElement;
+  if (oldReactElement) {
+    reactElement.alternate = oldReactElement;
+    reactElement.domNode = oldReactElement.domNode;
   }
 
   if (reactElementType === "text") {
@@ -104,14 +105,14 @@ export const render = (virtualNode, alternateReactElement) => {
 
   let firstReactElementChild = render(
     virtualNodeChildren[0],
-    alternateReactElement?.child
+    oldReactElement?.child
   );
 
   let i = 1;
   while (!firstReactElementChild && i < virtualNodeChildren.length) {
     firstReactElementChild = render(
       virtualNodeChildren[i],
-      alternateReactElement?.child
+      oldReactElement?.child
     );
     i++;
   }
@@ -124,7 +125,7 @@ export const render = (virtualNode, alternateReactElement) => {
   firstReactElementChild.parent = reactElement;
 
   {
-    let currentAlternateReactElement = alternateReactElement?.child?.sibling;
+    let currentAlternateReactElement = oldReactElement?.child?.sibling;
     let prevReactElement = reactElement.child;
 
     for (let j = i; j < virtualNodeChildren.length; j++) {
