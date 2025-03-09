@@ -40,8 +40,8 @@ const updateRootReactElement = (virtualNode, rootDomNode, reactRoot) => {
   // Rerendering
   reactRoot.wip = render(virtualNode, reactRoot.current);
 
-  // Step 1: Compare current and wip (Reconciliation)
-  reconcile(reactRoot.current, reactRoot.wip);
+  // Step 1: Compare current and wip
+  reconcile(reactRoot.wip, reactRoot.current);
 
   // Step 2: Apply changes (Commit Phase)
   commitWork(reactRoot);
