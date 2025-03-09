@@ -15,16 +15,18 @@ describe("render", () => {
       domNode: null,
       effectTag: EffectTag.NoChange,
       memoizedState: null,
-      children: [
-        {
-          type: "text",
-          text: "Hello World",
-          parent: expect.any(Object),
-          domNode: null,
-          effectTag: EffectTag.NoChange,
-          children: null,
-        },
-      ],
+      alternate: null,
+      child: {
+        type: "text",
+        text: "Hello World",
+        parent: expect.any(Object),
+        domNode: null,
+        effectTag: EffectTag.NoChange,
+        alternate: null,
+        child: null,
+        sibling: null,
+      },
+      sibling: null,
     });
   });
 
@@ -43,26 +45,28 @@ describe("render", () => {
       domNode: null,
       effectTag: EffectTag.NoChange,
       memoizedState: null,
-      children: [
-        {
-          type: "span",
-          props: { class: "child", children: ["Child Text"] },
+      alternate: null,
+      child: {
+        type: "span",
+        props: { class: "child", children: ["Child Text"] },
+        parent: expect.any(Object),
+        domNode: null,
+        effectTag: EffectTag.NoChange,
+        memoizedState: null,
+        alternate: null,
+        child: {
+          type: "text",
+          text: "Child Text",
           parent: expect.any(Object),
           domNode: null,
           effectTag: EffectTag.NoChange,
-          memoizedState: null,
-          children: [
-            {
-              type: "text",
-              text: "Child Text",
-              parent: expect.any(Object),
-              domNode: null,
-              effectTag: EffectTag.NoChange,
-              children: null,
-            },
-          ],
+          alternate: null,
+          child: null,
+          sibling: null,
         },
-      ],
+        sibling: null,
+      },
+      sibling: null,
     });
   });
 
@@ -83,16 +87,18 @@ describe("render", () => {
       domNode: null,
       effectTag: EffectTag.NoChange,
       memoizedState: null,
-      children: [
-        {
-          type: "text",
-          text: "Hello from Component",
-          parent: expect.any(Object),
-          domNode: null,
-          effectTag: EffectTag.NoChange,
-          children: null,
-        },
-      ],
+      alternate: null,
+      child: {
+        type: "text",
+        text: "Hello from Component",
+        parent: expect.any(Object),
+        domNode: null,
+        effectTag: EffectTag.NoChange,
+        alternate: null,
+        child: null,
+        sibling: null,
+      },
+      sibling: null,
     });
   });
 
@@ -119,44 +125,47 @@ describe("render", () => {
       domNode: null,
       effectTag: EffectTag.NoChange,
       memoizedState: null,
-      children: [
-        {
-          type: "span",
-          props: { children: ["Child 1"] },
+      alternate: null,
+      child: {
+        type: "span",
+        props: { children: ["Child 1"] },
+        parent: expect.any(Object),
+        domNode: null,
+        effectTag: EffectTag.NoChange,
+        memoizedState: null,
+        alternate: null,
+        child: {
+          type: "text",
+          text: "Child 1",
           parent: expect.any(Object),
           domNode: null,
           effectTag: EffectTag.NoChange,
-          memoizedState: null,
-          children: [
-            {
-              type: "text",
-              text: "Child 1",
-              parent: expect.any(Object),
-              domNode: null,
-              effectTag: EffectTag.NoChange,
-              children: null,
-            },
-          ],
+          alternate: null,
+          child: null,
+          sibling: null,
         },
-        {
+        sibling: {
           type: "span",
           props: { children: ["Child 2"] },
           parent: expect.any(Object),
           domNode: null,
           effectTag: EffectTag.NoChange,
           memoizedState: null,
-          children: [
-            {
-              type: "text",
-              text: "Child 2",
-              parent: expect.any(Object),
-              domNode: null,
-              effectTag: EffectTag.NoChange,
-              children: null,
-            },
-          ],
+          alternate: null,
+          child: {
+            type: "text",
+            text: "Child 2",
+            parent: expect.any(Object),
+            domNode: null,
+            effectTag: EffectTag.NoChange,
+            alternate: null,
+            child: null,
+            sibling: null,
+          },
+          sibling: null,
         },
-      ],
+      },
+      sibling: null,
     });
   });
 
@@ -187,44 +196,47 @@ describe("render", () => {
       domNode: null,
       effectTag: EffectTag.NoChange,
       memoizedState: null,
-      children: [
-        {
-          type: "li",
-          props: { children: ["Item 1"] },
+      alternate: null,
+      child: {
+        type: "li",
+        props: { children: ["Item 1"] },
+        parent: expect.any(Object),
+        domNode: null,
+        effectTag: EffectTag.NoChange,
+        memoizedState: null,
+        alternate: null,
+        child: {
+          type: "text",
+          text: "Item 1",
           parent: expect.any(Object),
           domNode: null,
           effectTag: EffectTag.NoChange,
-          memoizedState: null,
-          children: [
-            {
-              type: "text",
-              text: "Item 1",
-              parent: expect.any(Object),
-              domNode: null,
-              effectTag: EffectTag.NoChange,
-              children: null,
-            },
-          ],
+          alternate: null,
+          child: null,
+          sibling: null,
         },
-        {
+        sibling: {
           type: "li",
           props: { children: ["Item 2"] },
           parent: expect.any(Object),
           domNode: null,
           effectTag: EffectTag.NoChange,
           memoizedState: null,
-          children: [
-            {
-              type: "text",
-              text: "Item 2",
-              parent: expect.any(Object),
-              domNode: null,
-              effectTag: EffectTag.NoChange,
-              children: null,
-            },
-          ],
+          alternate: null,
+          child: {
+            type: "text",
+            text: "Item 2",
+            parent: expect.any(Object),
+            domNode: null,
+            effectTag: EffectTag.NoChange,
+            alternate: null,
+            child: null,
+            sibling: null,
+          },
+          sibling: null,
         },
-      ],
+      },
+      sibling: null,
     });
   });
 
@@ -245,16 +257,18 @@ describe("render", () => {
       domNode: null,
       effectTag: EffectTag.NoChange,
       memoizedState: null,
-      children: [
-        {
-          type: "text",
-          text: "Text content",
-          parent: expect.any(Object),
-          domNode: null,
-          effectTag: EffectTag.NoChange,
-          children: null,
-        },
-      ],
+      alternate: null,
+      child: {
+        type: "text",
+        text: "Text content",
+        parent: expect.any(Object),
+        domNode: null,
+        effectTag: EffectTag.NoChange,
+        alternate: null,
+        child: null,
+        sibling: null,
+      },
+      sibling: null,
     });
   });
 });

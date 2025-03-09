@@ -1,6 +1,8 @@
 export const EffectTag = {
   Update: Symbol("Update"),
   NoChange: Symbol("NoChange"),
+  Deletion: Symbol("Deletion"),
+  Placement: Symbol("Placement"),
 };
 
 const createReactElement = (element) => {
@@ -12,7 +14,9 @@ const createReactElement = (element) => {
       parent: null,
       domNode: null,
       effectTag: EffectTag.NoChange,
-      children: null,
+      alternate: null,
+      child: null,
+      sibling: null,
     };
   }
 
@@ -23,9 +27,6 @@ const createReactElement = (element) => {
     // Props
     props: element.props,
 
-    // Parent React Element
-    parent: null,
-
     // 실제 DOM 노드
     domNode: null,
 
@@ -35,7 +36,14 @@ const createReactElement = (element) => {
     // 저장된 state 값
     memoizedState: null,
 
-    children: null,
+    // 다른 트리의 노드 포인터
+    alternate: null,
+
+    parent: null,
+
+    child: null,
+
+    sibling: null,
   };
 };
 
@@ -84,21 +92,41 @@ export const render = (virtualNode) => {
     return reactElement;
   }
 
-  const children = reactElement.props.children;
+  const virtualNodeChildren = virtualNode.props.children;
 
-  if (!children) {
+  if (!virtualNodeChildren) {
     return reactElement;
   }
 
-  reactElement.children = [];
+  let firstReactElementChild = render(virtualNodeChildren[0]);
 
-  for (const child of children) {
-    const childReactElement = render(child);
+  let i = 1;
+  while (!firstReactElementChild && i < virtualNodeChildren.length) {
+    console.log(i);
+    firstReactElementChild = render(virtualNodeChildren[i]);
+    i++;
+  }
 
-    if (childReactElement) {
+  if (!firstReactElementChild) {
+    return reactElement;
+  }
+
+  reactElement.child = firstReactElementChild;
+  firstReactElementChild.parent = reactElement;
+
+  {
+    let prevReactElement = reactElement.child;
+
+    for (let j = i; j < virtualNodeChildren.length; j++) {
+      const virtualNodeChild = virtualNodeChildren[i];
+      const childReactElement = render(virtualNodeChild);
+
       // 부모 포인터 설정
       childReactElement.parent = reactElement;
-      reactElement.children.push(childReactElement);
+
+      // sibling 포인터 설정
+      prevReactElement.sibling = childReactElement;
+      prevReactElement = prevReactElement.sibling;
     }
   }
 
