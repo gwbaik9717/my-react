@@ -30,17 +30,15 @@ const createRootReact = (container) => {
 };
 
 const updateRootReactElement = (virtualNode, rootDomNode, reactRoot) => {
-  const rootReactElement = render(virtualNode);
-
   // Initial Rerendering
   if (!reactRoot.current) {
-    reactRoot.current = rootReactElement;
+    reactRoot.current = render(virtualNode);
     commitWork(reactRoot);
     return;
   }
 
   // Rerendering
-  reactRoot.wip = rootReactElement;
+  reactRoot.wip = render(virtualNode, reactRoot.current);
 
   // Step 1: Compare current and wip (Reconciliation)
   reconcile(reactRoot.current, reactRoot.wip);

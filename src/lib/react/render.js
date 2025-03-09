@@ -73,7 +73,7 @@ const isRenderable = (child) => {
 };
 
 // Convert Virtual Node to React Element
-export const render = (virtualNode) => {
+export const render = (virtualNode, alternateReactElement) => {
   if (!isRenderable(virtualNode)) {
     return null;
   }
@@ -85,7 +85,11 @@ export const render = (virtualNode) => {
   if (typeof reactElementType === "function") {
     // 컴포넌트 호출
     const virtualNode = reactElementType(reactElement.props);
-    return render(virtualNode);
+    return render(virtualNode, alternateReactElement);
+  }
+
+  if (alternateReactElement) {
+    reactElement.alternate = alternateReactElement;
   }
 
   if (reactElementType === "text") {
@@ -98,12 +102,17 @@ export const render = (virtualNode) => {
     return reactElement;
   }
 
-  let firstReactElementChild = render(virtualNodeChildren[0]);
+  let firstReactElementChild = render(
+    virtualNodeChildren[0],
+    alternateReactElement?.child
+  );
 
   let i = 1;
   while (!firstReactElementChild && i < virtualNodeChildren.length) {
-    console.log(i);
-    firstReactElementChild = render(virtualNodeChildren[i]);
+    firstReactElementChild = render(
+      virtualNodeChildren[i],
+      alternateReactElement?.child
+    );
     i++;
   }
 
@@ -115,11 +124,15 @@ export const render = (virtualNode) => {
   firstReactElementChild.parent = reactElement;
 
   {
+    let currentAlternateReactElement = alternateReactElement?.child?.sibling;
     let prevReactElement = reactElement.child;
 
     for (let j = i; j < virtualNodeChildren.length; j++) {
       const virtualNodeChild = virtualNodeChildren[i];
-      const childReactElement = render(virtualNodeChild);
+      const childReactElement = render(
+        virtualNodeChild,
+        currentAlternateReactElement
+      );
 
       // 부모 포인터 설정
       childReactElement.parent = reactElement;
@@ -127,6 +140,8 @@ export const render = (virtualNode) => {
       // sibling 포인터 설정
       prevReactElement.sibling = childReactElement;
       prevReactElement = prevReactElement.sibling;
+
+      currentAlternateReactElement = currentAlternateReactElement?.sibling;
     }
   }
 

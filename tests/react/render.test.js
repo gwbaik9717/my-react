@@ -271,4 +271,102 @@ describe("render", () => {
       sibling: null,
     });
   });
+
+  test("sets alternate property during re-render", () => {
+    const initialVirtualNode = createElement(
+      "div",
+      { id: "test" },
+      "Hello World"
+    );
+    const initialReactElement = render(initialVirtualNode);
+
+    const updatedVirtualNode = createElement(
+      "div",
+      { id: "test" },
+      "Updated World"
+    );
+    const updatedReactElement = render(updatedVirtualNode, initialReactElement);
+
+    expect(updatedReactElement.alternate).toBe(initialReactElement);
+    expect(updatedReactElement.child.alternate).toBe(initialReactElement.child);
+    expect(updatedReactElement.child.text).toBe("Updated World");
+  });
+
+  test("sets alternate property for nested elements during re-render", () => {
+    const initialVirtualNode = createElement(
+      "div",
+      { id: "parent" },
+      createElement("span", { class: "child" }, "Child Text")
+    );
+    const initialReactElement = render(initialVirtualNode);
+
+    const updatedVirtualNode = createElement(
+      "div",
+      { id: "parent" },
+      createElement("span", { class: "child" }, "Updated Child Text")
+    );
+    const updatedReactElement = render(updatedVirtualNode, initialReactElement);
+
+    expect(updatedReactElement.alternate).toBe(initialReactElement);
+    expect(updatedReactElement.child.alternate).toBe(initialReactElement.child);
+    expect(updatedReactElement.child.child.alternate).toBe(
+      initialReactElement.child.child
+    );
+    expect(updatedReactElement.child.child.text).toBe("Updated Child Text");
+  });
+
+  test("sets alternate property for function components during re-render", () => {
+    const FunctionComponent = (props) => {
+      return createElement("h1", null, props.title);
+    };
+
+    const initialVirtualNode = createElement(FunctionComponent, {
+      title: "Hello from Component",
+    });
+    const initialReactElement = render(initialVirtualNode);
+
+    const updatedVirtualNode = createElement(FunctionComponent, {
+      title: "Updated from Component",
+    });
+    const updatedReactElement = render(updatedVirtualNode, initialReactElement);
+
+    expect(updatedReactElement.alternate).toBe(initialReactElement);
+    expect(updatedReactElement.child.alternate).toBe(initialReactElement.child);
+    expect(updatedReactElement.child.text).toBe("Updated from Component");
+  });
+
+  test("sets alternate property for nested function components during re-render", () => {
+    const ChildComponent = (props) => {
+      return createElement("li", null, props.text);
+    };
+
+    const ParentComponent = () => {
+      return createElement(
+        "ul",
+        { class: "list" },
+        createElement(ChildComponent, { text: "Item 1" }),
+        createElement(ChildComponent, { text: "Item 2" })
+      );
+    };
+
+    const initialVirtualNode = createElement(ParentComponent, null);
+    const initialReactElement = render(initialVirtualNode);
+
+    const updatedVirtualNode = createElement(ParentComponent, null);
+    const updatedReactElement = render(updatedVirtualNode, initialReactElement);
+
+    expect(updatedReactElement.alternate).toBe(initialReactElement);
+    expect(updatedReactElement.child.alternate).toBe(initialReactElement.child);
+    expect(updatedReactElement.child.child.alternate).toBe(
+      initialReactElement.child.child
+    );
+    expect(updatedReactElement.child.child.text).toBe("Item 1");
+    expect(updatedReactElement.child.sibling.alternate).toBe(
+      initialReactElement.child.sibling
+    );
+    expect(updatedReactElement.child.sibling.child.alternate).toBe(
+      initialReactElement.child.sibling.child
+    );
+    expect(updatedReactElement.child.sibling.child.text).toBe("Item 2");
+  });
 });
