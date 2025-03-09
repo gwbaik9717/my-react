@@ -1,3 +1,5 @@
+import { React } from "./react";
+
 export const EffectTag = {
   Update: Symbol("Update"),
   NoChange: Symbol("NoChange"),
@@ -84,7 +86,13 @@ export const render = (virtualNode, oldReactElement) => {
   // Function Component 일 경우
   if (typeof reactElementType === "function") {
     // 컴포넌트 호출
+    if (reactElement.memoizedState === null) {
+      reactElement.memoizedState = [];
+    }
+
+    React.__prepare(reactElement.memoizedState);
     const virtualNode = reactElementType(reactElement.props);
+
     return render(virtualNode, oldReactElement);
   }
 
