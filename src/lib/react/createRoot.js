@@ -6,12 +6,22 @@ import { render } from "./render";
 export const createRoot = (rootDomNode) => {
   const reactRoot = createRootReact(rootDomNode);
 
-  const render = (virtualNode) => {
+  const render = (component) => {
+    if (!reactRoot.component) {
+      reactRoot.component = component;
+    }
+
+    __rerender();
+  };
+
+  const __rerender = () => {
+    const virtualNode = reactRoot.component();
     updateRootReactElement(virtualNode, rootDomNode, reactRoot);
   };
 
   return {
     render,
+    __rerender,
   };
 };
 
@@ -25,6 +35,9 @@ const createRootReact = (rootDomNode) => {
 
     // 수정 중인 React Element Tree
     wip: null,
+
+    // 루트 컴포넌트
+    component: null,
   };
 };
 

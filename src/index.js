@@ -1,15 +1,12 @@
 import { App } from "./components/useState/App";
-import { ReactDOM } from "./lib/react-dom";
-import { React } from "./lib/react";
-
-const render = (Component, rootNode) => {
-  React.__prepareForRender(Component);
-  ReactDOM.render(Component(), rootNode);
-};
+import { createRoot } from "./lib/react/createRoot";
 
 const root = document.getElementById("root");
+const reactRoot = createRoot(root);
 
-export const renderApp = () => render(App, root);
+// Inital Render
+reactRoot.render(App);
 
-// 초기 렌더링
-renderApp();
+export const rerender = () => {
+  reactRoot.__rerender();
+};

@@ -1,22 +1,28 @@
-import { renderApp } from "../..";
+import { rerender } from "../..";
 import { React } from "../../lib/react";
 
 export const Counter = () => {
   const [count, setCount] = React.useState(0);
 
-  const handleClick = () => {
-    setCount((prevCount) => prevCount + 1);
-
-    // 강제 전체 리렌더링
-    renderApp();
-  };
+  // Manually set up interval
+  if (!Counter.interval) {
+    Counter.interval = setInterval(() => {
+      setCount((prevCount) => prevCount + 1);
+      rerender();
+    }, 1000);
+  }
 
   return (
     <div>
       <p>현재 카운트: {count}</p>
-      <button id="btn" onClick={handleClick}>
-        증가
-      </button>
     </div>
   );
+};
+
+// Clear interval when the component is unmounted
+Counter.cleanup = () => {
+  if (Counter.interval) {
+    clearInterval(Counter.interval);
+    Counter.interval = null;
+  }
 };
