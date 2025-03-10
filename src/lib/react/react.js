@@ -1,15 +1,13 @@
 export const React = (() => {
-  let __root = null;
-
   let globalHooks = null;
   let globalHookIndex = 0;
 
-  const __setRoot = (reactRoot) => {
-    __root = reactRoot;
-  };
-
+  // Function Component 호출 전 불려야 함.
   const __prepare = (hooks) => {
-    globalHooks = hooks;
+    if (globalHooks === null) {
+      globalHooks = hooks;
+    }
+
     globalHookIndex = 0;
   };
 
@@ -55,6 +53,5 @@ export const React = (() => {
     useState,
     __prepare,
     __reset,
-    __setRoot,
   };
 })();

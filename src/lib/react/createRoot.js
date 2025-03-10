@@ -6,9 +6,6 @@ import { render } from "./render";
 export const createRoot = (rootDomNode) => {
   const reactRoot = createRootReact(rootDomNode);
 
-  // Init root
-  React.__setRoot(reactRoot);
-
   const render = (virtualNode) => {
     updateRootReactElement(virtualNode, rootDomNode, reactRoot);
   };
