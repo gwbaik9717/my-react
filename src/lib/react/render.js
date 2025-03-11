@@ -137,11 +137,15 @@ export const render = (virtualNode, oldReactElement) => {
     let prevReactElement = reactElement.child;
 
     for (let j = i; j < virtualNodeChildren.length; j++) {
-      const virtualNodeChild = virtualNodeChildren[i];
+      const virtualNodeChild = virtualNodeChildren[j];
       const childReactElement = render(
         virtualNodeChild,
         currentAlternateReactElement
       );
+
+      if (!childReactElement) {
+        continue;
+      }
 
       // 부모 포인터 설정
       childReactElement.parent = reactElement;

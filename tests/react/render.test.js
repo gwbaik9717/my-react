@@ -369,4 +369,27 @@ describe("render", () => {
     );
     expect(updatedReactElement.child.sibling.child.text).toBe("Item 2");
   });
+
+  test("handles skipped children correctly during re-render", () => {
+    const initialVirtualNode = createElement(
+      "div",
+      { id: "parent" },
+      createElement("span", { class: "child" }, "Child Text"),
+      null,
+      undefined
+    );
+    const initialReactElement = render(initialVirtualNode);
+
+    const updatedVirtualNode = createElement(
+      "div",
+      { id: "parent" },
+      createElement("span", { class: "child" }, "Updated Child Text"),
+      null,
+      createElement("div", { class: "sibling" }, "New Child Text")
+    );
+    const updatedReactElement = render(updatedVirtualNode, initialReactElement);
+
+    expect(updatedReactElement.child.child.text).toBe("Updated Child Text");
+    expect(updatedReactElement.child.sibling.child.text).toBe("New Child Text");
+  });
 });

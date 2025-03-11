@@ -15,6 +15,7 @@ export const Counter = () => {
   return (
     <div>
       <p>현재 카운트: {count}</p>
+      {count % 2 === 0 && <p>짝수입니다!</p>}
     </div>
   );
 };
