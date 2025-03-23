@@ -112,6 +112,11 @@ const setAttributes = (domNode, props) => {
       continue;
     }
 
+    if (propKey === "checked") {
+      domNode[propKey] = propValue;
+      continue;
+    }
+
     domNode.setAttribute(propKey, propValue);
   }
 };
