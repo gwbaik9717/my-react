@@ -61,7 +61,7 @@ const handleEvent = (nativeEvent, reactRoot) => {
   const eventHandler = findEventHandler(syntheticEvent, reactRoot);
 
   if (eventHandler) {
-    eventHandler();
+    eventHandler(syntheticEvent);
   }
 };
 
