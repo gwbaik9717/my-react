@@ -30,6 +30,12 @@ const commitWork = (reactElement, rootDomNode) => {
     return;
   }
 
+  if (typeof reactElement.type === "function") {
+    commitWork(reactElement.child, rootDomNode);
+    commitWork(reactElement.sibling, rootDomNode);
+    return;
+  }
+
   // Initial Commit
   if (!reactElement.domNode) {
     reactElement.domNode = createDomNode(reactElement);
@@ -40,7 +46,13 @@ const commitWork = (reactElement, rootDomNode) => {
         reactElement.sibling?.domNode
       );
     } else {
-      reactElement.parent.domNode.insertBefore(
+      let parent = reactElement.parent;
+
+      while (typeof parent.type === "function") {
+        parent = parent.parent;
+      }
+
+      parent.domNode.insertBefore(
         reactElement.domNode,
         reactElement.sibling?.domNode
       );

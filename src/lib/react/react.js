@@ -4,9 +4,7 @@ export const React = (() => {
 
   // Function Component 호출 전 불려야 함.
   const __prepare = (hooks) => {
-    if (globalHooks === null) {
-      globalHooks = hooks;
-    }
+    globalHooks = hooks;
 
     globalHookIndex = 0;
   };

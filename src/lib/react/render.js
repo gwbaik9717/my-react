@@ -85,15 +85,27 @@ export const render = (virtualNode, oldReactElement) => {
 
   // Function Component 일 경우
   if (typeof reactElementType === "function") {
-    // 컴포넌트 호출
-    if (reactElement.memoizedState === null) {
-      reactElement.memoizedState = [];
+    if (oldReactElement) {
+      reactElement.memoizedState = oldReactElement.memoizedState;
+      React.__prepare(reactElement.memoizedState);
+    } else {
+      if (reactElement.memoizedState === null) {
+        reactElement.memoizedState = [];
+      }
+      React.__prepare(reactElement.memoizedState);
     }
 
-    React.__prepare(reactElement.memoizedState);
     const virtualNode = reactElementType(reactElement.props);
 
-    return render(virtualNode, oldReactElement);
+    const child = render(virtualNode, oldReactElement?.child);
+    reactElement.child = child;
+    child.parent = reactElement;
+
+    if (oldReactElement) {
+      reactElement.alternate = oldReactElement;
+    }
+
+    return reactElement;
   }
 
   if (oldReactElement) {

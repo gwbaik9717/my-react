@@ -1,12 +1,12 @@
 import { rerender } from "../..";
 import { React } from "../../lib/react";
 
-export const Counter = () => {
-  const [count, setCount] = React.useState(0);
+export const Counter2 = () => {
+  const [count, setCount] = React.useState(1);
 
   // Manually set up interval
-  if (!Counter.interval) {
-    Counter.interval = setInterval(() => {
+  if (!Counter2.interval) {
+    Counter2.interval = setInterval(() => {
       setCount((prevCount) => prevCount + 1);
       rerender();
     }, 1000);
@@ -21,9 +21,9 @@ export const Counter = () => {
 };
 
 // Clear interval when the component is unmounted
-// Counter.cleanup = () => {
-//   if (Counter.interval) {
-//     clearInterval(Counter.interval);
-//     Counter.interval = null;
-//   }
-// };
+Counter2.cleanup = () => {
+  if (Counter.interval) {
+    clearInterval(Counter.interval);
+    Counter.interval = null;
+  }
+};
