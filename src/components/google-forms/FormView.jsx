@@ -13,6 +13,7 @@ export const FormView = () => {
   const resetForm = () => {
     setFormData({});
     setCurrentScreen(1);
+    rerender();
   };
 
   const handleClickPrev = () => {
@@ -44,7 +45,14 @@ export const FormView = () => {
           />
         );
       case 3:
-        return <Screen3 formData={formData} resetForm={resetForm} />;
+        return (
+          <Screen3
+            formData={formData}
+            setFormData={setFormData}
+            onNext={handleClickNext}
+            resetForm={resetForm}
+          />
+        );
       default:
         return null;
     }
