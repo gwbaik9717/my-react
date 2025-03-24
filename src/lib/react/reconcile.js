@@ -13,6 +13,7 @@ const setEffectTag = (newReactElement, oldReactElement) => {
     }
 
     if (oldReactElement.type !== newReactElement.type) {
+      oldReactElement.effectTag = EffectTag.Deletion;
       newReactElement.effectTag = EffectTag.Placement;
       return;
     }
