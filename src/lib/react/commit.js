@@ -124,7 +124,7 @@ const setAttributes = (domNode, props) => {
       continue;
     }
 
-    if (propKey === "checked") {
+    if (propKey === "checked" || propKey === "value") {
       domNode[propKey] = propValue;
       continue;
     }

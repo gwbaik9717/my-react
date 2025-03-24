@@ -36,7 +36,13 @@ export const FormView = () => {
           />
         );
       case 2:
-        return <Screen2 formData={formData} setFormData={setFormData} />;
+        return (
+          <Screen2
+            formData={formData}
+            setFormData={setFormData}
+            onNext={handleClickNext}
+          />
+        );
       case 3:
         return <Screen3 formData={formData} resetForm={resetForm} />;
       default:
@@ -44,5 +50,10 @@ export const FormView = () => {
     }
   };
 
-  return <div>{renderScreen()}</div>;
+  return (
+    <div>
+      {renderScreen()}
+      {currentScreen > 1 && <button onClick={handleClickPrev}>Previous</button>}
+    </div>
+  );
 };
