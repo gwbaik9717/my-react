@@ -21,7 +21,7 @@ const commitOldWork = (oldReactElement) => {
 
   // EffectTag: Deletion
   if (oldReactElement.effectTag === EffectTag.Deletion) {
-    oldReactElement.domNode.remove();
+    oldReactElement.domNode?.remove();
   }
 };
 
@@ -34,6 +34,18 @@ const commitWork = (reactElement, rootDomNode) => {
     commitWork(reactElement.child, rootDomNode);
     commitWork(reactElement.sibling, rootDomNode);
     return;
+  }
+
+  if (reactElement.effectTag === EffectTag.Placement) {
+    reactElement.domNode = createDomNode(reactElement);
+
+    let parent = reactElement.parent;
+
+    while (typeof parent.type === "function") {
+      parent = parent.parent;
+    }
+
+    parent.domNode.appendChild(reactElement.domNode);
   }
 
   // Initial Commit
