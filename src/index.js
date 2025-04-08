@@ -1,4 +1,4 @@
-import { App } from "./components/useState/App";
+import { App } from "./components/google-forms/App";
 import { createRoot } from "./lib/react/createRoot";
 
 const root = document.getElementById("root");

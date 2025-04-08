@@ -2,9 +2,12 @@ import { commitRoot } from "./commit";
 import { React } from "./react";
 import { reconcile } from "./reconcile";
 import { render } from "./render";
+import { listenToNativeEvents } from "./synthetic-event";
 
 export const createRoot = (rootDomNode) => {
   const reactRoot = createRootReact(rootDomNode);
+
+  listenToNativeEvents(rootDomNode, reactRoot);
 
   const render = (component) => {
     if (!reactRoot.component) {
