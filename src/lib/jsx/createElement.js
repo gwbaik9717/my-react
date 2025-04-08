@@ -16,58 +16,8 @@ const flatten = (child) => {
     return result;
   }
 
-  if (isRenderable(child)) {
-    const normalizedChild = normalizeRenderableChild(child);
-    result.push(normalizedChild);
-  }
-
+  result.push(child);
   return result;
-};
-
-/**
- * 주어진 자식 요소를 정규화하는 함수
- *
- * 자식 요소는 boolean 값(true 또는 false)이 아니고,
- * undefined 또는 null이 아닌 경우 렌더링 가능하다고 간주됩니다.
- *
- * @param {*} child - 정규화할 자식 요소.
- * @returns {*} - 정규화된 자식 요소.
- */
-export const normalizeRenderableChild = (child) => {
-  if (!isRenderable(child)) {
-    throw new Error("Child is not renderable!");
-  }
-
-  if (typeof child === "number") {
-    return child.toString();
-  }
-
-  return child;
-};
-
-/**
- * 주어진 자식 요소가 렌더링 가능한지 확인하는 함수
- *
- * 자식 요소는 boolean 값(true 또는 false)이 아니고,
- * undefined 또는 null이 아닌 경우 렌더링 가능하다고 간주됩니다.
- *
- * @param {*} child - 확인할 자식 요소.
- * @returns {boolean} - 자식 요소가 렌더링 가능하면 true, 그렇지 않으면 false를 반환.
- */
-const isRenderable = (child) => {
-  if (child === null) {
-    return false;
-  }
-
-  if (typeof child === "string" || typeof child === "number") {
-    return true;
-  }
-
-  if (typeof child === "object" && "props" in child && "type" in child) {
-    return true;
-  }
-
-  return false;
 };
 
 /**

@@ -1,22 +1,17 @@
 export const React = (() => {
-  let globalHooksMap = new Map();
   let globalHooks = null;
   let globalHookIndex = 0;
 
-  // Reset React
-  const __reset = () => {
-    globalHooksMap = new Map();
-    globalHooks = null;
+  // Function Component 호출 전 불려야 함.
+  const __prepare = (hooks) => {
+    globalHooks = hooks;
+
     globalHookIndex = 0;
   };
 
-  // Reset hooks before rendering
-  const __prepareForRender = (Component) => {
-    if (!globalHooksMap.has(Component)) {
-      globalHooksMap.set(Component, []);
-    }
-
-    globalHooks = globalHooksMap.get(Component);
+  // Reset React
+  const __reset = () => {
+    globalHooks = null;
     globalHookIndex = 0;
   };
 
@@ -54,7 +49,7 @@ export const React = (() => {
 
   return {
     useState,
-    __prepareForRender,
+    __prepare,
     __reset,
   };
 })();
